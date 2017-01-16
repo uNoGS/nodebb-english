@@ -31,12 +31,14 @@ set to 127.0.0.1.
     RequestHeader set X-Forwarded-Proto "http"
 
     RewriteEngine On
-
+    #add AllowEncodedSlashes to deal with your admin requests e.g. admin%2Fadmin
+    AllowEncodedSlashes On 
     RewriteCond %{REQUEST_URI}  ^/socket.io            [NC]
     RewriteCond %{QUERY_STRING} transport=websocket    [NC]
     RewriteRule /(.*)           ws://127.0.0.1:4567/$1 [P,L]
-
-    ProxyPass / http://127.0.0.1:4567/
+    
+    #don't canonicalise path
+    ProxyPass / http://127.0.0.1:4567/ nocanon
     ProxyPassReverse / http://127.0.0.1:4567/
 
 
